@@ -165,7 +165,13 @@ public class ProblemService {
     public Problem importProblem(String input) {
         LeetCodeProblem lcp = leetCodeService.fetchProblem(input);
 
-        if (problemRepository.existsById(Long.parseLong(lcp.questionFrontendId()))) {
+        if (lcp == null) {
+            throw new ProblemNotFoundException(input);
+        }
+
+        Long problemId = Long.parseLong(lcp.questionFrontendId());
+
+        if (problemRepository.existsById(problemId)) {
             throw new ProblemAlreadyExistsException(lcp.questionFrontendId());
         }
 

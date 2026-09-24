@@ -79,7 +79,9 @@ public class ModuleService {
         Module m = moduleRepository.findById(moduleId).orElseThrow(() -> new ModuleNotFoundException(moduleId));
         Problem p = problemRepository.findById(problemId).orElseThrow(() -> new ProblemNotFoundException(problemId));
 
-        return m.addProblem(p);
+        ModuleProblem mp = m.addProblem(p);
+        problemOrdering.insert(m.getProblems(), mp, -1);
+        return mp;
     }
 
     // add batch of problems
