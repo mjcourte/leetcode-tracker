@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/head :: head}"></head>
+
+  <body>
+    <nav th:replace="~{fragments/nav :: nav}"></nav>
+
+    <main class="container py-4">
+      <h1 class="mb-4">Import Problems</h1>
+
+      <!-- Single problem -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="h5 card-title">Import a Problem</h2>
+
+          <p class="text-body-secondary">
+            Enter a problem name, number and name, slug, or LeetCode URL.
+          </p>
+
+          <form th:action="@{/web/problems/import}" method="post">
+            <div class="mb-3">
+              <label for="input" class="form-label"> Problem </label>
+
+              <input
+                type="text"
+                id="input"
+                name="input"
+                class="form-control"
+                placeholder="e.g. Two Sum, 1. Two Sum, two-sum"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Import</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Batch import -->
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h5 card-title">Batch Import</h2>
+
+          <p class="text-body-secondary">Paste one problem per line.</p>
+
+          <form th:action="@{/web/problems/import/batch}" method="post">
+            <div class="mb-3">
+              <label for="inputs" class="form-label"> Problems </label>
+
+              <textarea
+                id="inputs"
+                name="inputs"
+                class="form-control"
+                rows="10"
+                placeholder="Two Sum&#10;Valid Parentheses&#10;53. Maximum Subarray&#10;https://leetcode.com/problems/merge-intervals/"
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              Import Problems
+            </button>
+          </form>
+          <div th:if="${results != null}" class="card mt-4">
+            <div class="card-body">
+              <h2 class="h5 card-title">Import Results</h2>
+
+              <ul class="mb-0">
+                <li th:each="result : ${results}">
+                  <strong th:text="${result.status}">IMPORTED</strong>
+                  <span th:text="${result.message}">Imported: Two Sum</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div th:replace="~{fragments/scripts :: scripts}"></div>
+  </body>
+</html>

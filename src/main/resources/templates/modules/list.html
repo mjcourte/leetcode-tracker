@@ -1,0 +1,93 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/head :: head}"> </head>
+  <body>
+    <nav th:replace="~{fragments/nav :: nav}"></nav>
+    <main class="container">
+      <h1>Modules</h1>
+
+      <div th:if="${#lists.isEmpty(modules)}">
+        <p>No modules yet.</p>
+      </div>
+
+      <div class="table-responsive">
+        <table
+          class="table table-striped table-hover align-middle"
+          th:unless="${#lists.isEmpty(modules)}"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Curriculum</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr th:each="module : ${modules}">
+              <td>
+                <a
+                  th:href="@{/web/modules/{id}(id=${module.id})}"
+                  th:text="${module.name}"
+                >
+                  Module
+                </a>
+              </td>
+
+              <td>
+                <form
+                  th:action="@{/web/modules/{moduleId}/curriculum(moduleId=${module.id})}"
+                  method="post"
+                  class="d-flex gap-2"
+                >
+                  <select name="curriculumId" class="form-select w-50">
+                    <option value="">Unassigned</option>
+
+                    <option
+                      th:each="curriculum : ${curricula}"
+                      th:value="${curriculum.id}"
+                      th:text="${curriculum.name}"
+                      th:selected="${module.curriculum != null and module.curriculum.id == curriculum.id}"
+                    >
+                      Curriculum
+                    </option>
+                  </select>
+
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+              </td>
+
+              <td>
+                <div class="d-flex gap-2 align-items-center">
+                  <form
+                    th:action="@{/web/modules/{moduleId}/delete(moduleId=${module.id})}"
+                    method="post"
+                  >
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Create Module</h2>
+
+      <form th:action="@{/web/modules}" method="post" class="col-md-6">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Module</button>
+      </form>
+    </main>
+  </body>
+</html>

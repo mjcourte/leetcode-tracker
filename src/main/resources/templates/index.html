@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/head :: head}"> </head>
+
+  <body>
+    <nav th:replace="~{fragments/nav :: nav}"></nav>
+    <main class="container">
+      <h1>LeetCode Tracker</h1>
+      <p>This has been a wonderful use of time.</p>
+      <a th:href="@{/web/problems/import}" class="btn btn-primary">
+        Import Problems
+      </a>
+    </main>
+  </body>
+</html>

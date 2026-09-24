@@ -1,0 +1,285 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/head :: head}"> </head>
+  <body>
+    <nav th:replace="~{fragments/nav :: nav}"></nav>
+    <main class="container">
+      <p>
+        <a th:href="@{/web/modules}">← Back to Modules</a>
+      </p>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a
+              th:href="@{/web/curricula/{id}(id=${module.curriculum.id})}"
+              th:text="${module.curriculum.name}"
+            >
+              Curriculum Name
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item active"
+            aria-current="page"
+            th:text="${module.name}"
+          >
+            Arrays
+          </li>
+        </ol>
+      </nav>
+
+      <h1 th:text="${module.name}">Module</h1>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row g-4 align-items-end">
+            <!-- Current curriculum -->
+            <div class="col-md-5">
+              <div class="text-body-secondary mb-2">Curriculum</div>
+
+              <div th:if="${module.curriculum != null}">
+                <a
+                  th:href="@{/web/curricula/{id}(id=${module.curriculum.id})}"
+                  th:text="${module.curriculum.name}"
+                  class="text-decoration-none"
+                >
+                  Grind 75
+                </a>
+              </div>
+
+              <div
+                th:unless="${module.curriculum != null}"
+                class="text-body-secondary"
+              >
+                Unassigned
+              </div>
+            </div>
+
+            <!-- Assignment -->
+            <div class="col-md-7">
+              <form
+                th:action="@{/web/modules/{moduleId}/curriculum(moduleId=${module.id})}"
+                method="post"
+              >
+                <label for="curriculumId" class="form-label">
+                  Assign curriculum
+                </label>
+
+                <div class="d-flex gap-2">
+                  <select
+                    id="curriculumId"
+                    name="curriculumId"
+                    class="form-select"
+                  >
+                    <option th:if="${module.curriculum != null}" value="">
+                      Unassigned
+                    </option>
+
+                    <option
+                      th:each="curriculum : ${curricula}"
+                      th:value="${curriculum.id}"
+                      th:text="${curriculum.name}"
+                      th:selected="${module.curriculum != null
+                                              and curriculum.id == module.curriculum.id}"
+                    ></option>
+                  </select>
+
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Problems</h2>
+
+      <div th:if="${#lists.isEmpty(module.problems)}">
+        <p>No problems yet.</p>
+      </div>
+
+      <div class="table-responsive">
+        <table
+          class="table table-striped table-hover align-middle"
+          th:unless="${#lists.isEmpty(module.problems)}"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Solved</th>
+              <th scope="col">Revisit</th>
+              <th scope="col">Position</th>
+              <th scope="col">Problem</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr th:each="moduleProblem : ${module.problems}">
+              <td>
+                <span
+                  th:if="${solvedProblemIds.contains(moduleProblem.problem.id)}"
+                  class="badge text-bg-success"
+                >
+                  Solved
+                </span>
+
+                <span
+                  th:unless="${solvedProblemIds.contains(moduleProblem.problem.id)}"
+                  class="badge text-bg-secondary"
+                >
+                  Unsolved
+                </span>
+              </td>
+
+              <!--ADD REVISIT td HERE-->
+              <td>
+                <button
+                  th:if="${!solvedProblemIds.contains(moduleProblem.problem.id)}"
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  disabled
+                >
+                  Revisit
+                </button>
+
+                <form
+                  th:if="${solvedProblemIds.contains(moduleProblem.problem.id) and !moduleProblem.isRevisit()}"
+                  th:action="@{/web/modules/{moduleId}/problems/{problemId}/revisit(
+                  moduleId=${module.id},
+                  problemId=${moduleProblem.id}
+                  )}"
+                  method="post"
+                  class="d-inline"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-sm btn-outline-secondary"
+                  >
+                    Revisit
+                  </button>
+                </form>
+
+                <form
+                  th:if="${solvedProblemIds.contains(moduleProblem.problem.id) and moduleProblem.isRevisit()}"
+                  th:action="@{/web/modules/{moduleId}/problems/{problemId}/revisit(moduleId=${module.id},problemId=${moduleProblem.id})}"
+                  method="post"
+                  class="d-inline"
+                >
+                  <button type="submit" class="btn btn-sm btn-warning">
+                    Revisit
+                  </button>
+                </form>
+              </td>
+
+              <td th:text="${moduleProblem.position}">0</td>
+
+              <td>
+                <a
+                  th:href="@{/web/problems/{id}(id=${moduleProblem.problem.id})}"
+                  th:text="${moduleProblem.problem.title}"
+                >
+                  Problem
+                </a>
+              </td>
+
+              <td>
+                <div class="d-flex gap-2 align-items-center">
+                  <form
+                    th:action="@{/web/modules/{moduleId}/problems/{moduleProblemId}/move(
+                        moduleId=${module.id},
+                        moduleProblemId=${moduleProblem.id}
+                    )}"
+                    method="post"
+                    class="d-flex gap-2"
+                  >
+                    <input
+                      type="number"
+                      name="position"
+                      min="0"
+                      th:value="${moduleProblem.position}"
+                      class="form-control"
+                    />
+
+                    <button type="submit" class="btn btn-secondary">
+                      Move
+                    </button>
+                  </form>
+
+                  <form
+                    th:action="@{/web/modules/{moduleId}/problems/{moduleProblemId}/remove(
+                        moduleId=${module.id},
+                        moduleProblemId=${moduleProblem.id}
+                    )}"
+                    method="post"
+                  >
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Add Problem</h3>
+
+      <form
+        th:action="@{/web/modules/{moduleId}/problems(
+        moduleId=${module.id}
+    )}"
+        method="post"
+        class="d-flex gap-2 align-items-center"
+      >
+        <label for="problemId" class="form-label">Problem</label>
+
+        <select
+          id="problemId"
+          name="problemId"
+          class="form-select w-50"
+          required
+        >
+          <option value="">Select a problem</option>
+
+          <option
+            th:each="problem : ${availableProblems}"
+            th:value="${problem.id}"
+            th:text="${problem.title}"
+          >
+            Problem
+          </option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Add Problem</button>
+      </form>
+
+      <h2>Edit Module</h2>
+
+      <form
+        th:action="@{/web/modules/{id}/edit(id=${module.id})}"
+        method="post"
+        class="d-flex gap-2 align-items-center"
+      >
+        <label for="name" class="form-label mb-0">Name</label>
+
+        <input
+          id="name"
+          name="name"
+          type="text"
+          th:value="${module.name}"
+          class="form-control w-50"
+          required
+        />
+
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+
+      <h2>Delete Module</h2>
+
+      <form
+        th:action="@{/web/modules/{id}/delete(id=${module.id})}"
+        method="post"
+        class="d-flex gap-2"
+      >
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </main>
+  </body>
+</html>
