@@ -164,8 +164,9 @@
               <tr>
                 <th scope="col">Solved</th>
                 <th scope="col">Revisit</th>
-                <th scope="col">Position</th>
                 <th scope="col">Problem</th>
+                <th scope="col">Difficulty</th>
+                <th scope="col">Topic</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -228,8 +229,6 @@
                   </form>
                 </td>
 
-                <td th:text="${curriculumProblem.position}">0</td>
-
                 <td>
                   <a
                     th:href="@{/web/problems/{id}(id=${curriculumProblem.problem.id})}"
@@ -237,6 +236,26 @@
                   >
                     Problem
                   </a>
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    th:classappend="${curriculumProblem.problem.difficulty.badgeClass}"
+                    th:text="${curriculumProblem.problem.difficulty.displayName}"
+                  >
+                    Easy
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    th:if="${!curriculumProblem.problem.tags.isEmpty()}"
+                    class="badge rounded-pill text-bg-secondary"
+                    th:text="${curriculumProblem.problem.tags[0].name}"
+                  >
+                    Array
+                  </span>
                 </td>
 
                 <td>

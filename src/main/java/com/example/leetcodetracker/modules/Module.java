@@ -84,9 +84,7 @@ public class Module implements Positionable {
             throw new IllegalArgumentException("Problem is already in module.");
         }
 
-        ModuleProblem mp = new ModuleProblem(this, problem, 0);
-        problems.add(mp);
-        return mp;
+        return new ModuleProblem(this, problem);
     }
 
     public void removeProblem(ModuleProblem problem) {

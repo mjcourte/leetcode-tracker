@@ -106,6 +106,8 @@
               <th scope="col">Solved</th>
               <th scope="col">Revisit</th>
               <th scope="col">Problem</th>
+              <th scope="col">Difficulty</th>
+              <th scope="col">Topic</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -178,6 +180,26 @@
               </td>
 
               <td>
+                <span
+                  class="badge"
+                  th:classappend="${moduleProblem.problem.difficulty.badgeClass}"
+                  th:text="${moduleProblem.problem.difficulty.displayName}"
+                >
+                  Easy
+                </span>
+              </td>
+
+              <td>
+                <span
+                  th:if="${!moduleProblem.problem.tags.isEmpty()}"
+                  class="badge rounded-pill text-bg-secondary"
+                  th:text="${moduleProblem.problem.tags[0].name}"
+                >
+                  Array
+                </span>
+              </td>
+
+              <td>
                 <div class="d-flex gap-2 align-items-center">
                   <form
                     th:action="@{/web/modules/{moduleId}/problems/{moduleProblemId}/move(
@@ -185,7 +207,7 @@
                         moduleProblemId=${moduleProblem.id}
                     )}"
                     method="post"
-                    class="d-flex gap-2 w-25"
+                    class="d-flex gap-2 w-50"
                   >
                     <input
                       type="number"
@@ -216,7 +238,7 @@
         </table>
       </div>
 
-      <h3>Add Problem</h3>
+      <h3>Link Problem</h3>
 
       <form
         th:action="@{/web/modules/{moduleId}/problems(
@@ -244,7 +266,7 @@
           </option>
         </select>
 
-        <button type="submit" class="btn btn-primary">Add Problem</button>
+        <button type="submit" class="btn btn-primary">Link</button>
       </form>
 
       <h2>Edit Module</h2>
@@ -271,7 +293,7 @@
       <div class="mt-5">
         <h2>Danger Zone</h2>
 
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 mb-4">
           <form
             th:action="@{/web/modules/{moduleId}/problems/normalize(
                 moduleId=${module.id}

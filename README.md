@@ -22,9 +22,3 @@ all at once because im stupid
 1. draggable reorder move instead of form entry
 1. text-like file create data eg curriculum+modules+problems
 1. refactor submissions to CollectionProblems?
-
-## gripes
-
-- module detail page: add -> delete -> add something mangled, errors on re-add
-- show difficulty badges in table
-- same same for curr-problem table

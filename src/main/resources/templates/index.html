@@ -1,15 +1,88 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{fragments/head :: head}"> </head>
+  <head th:replace="~{fragments/head :: head}"></head>
 
   <body>
     <nav th:replace="~{fragments/nav :: nav}"></nav>
+
     <main class="container">
-      <h1>LeetCode Tracker</h1>
-      <p>This has been a wonderful use of time.</p>
-      <a th:href="@{/web/problems/import}" class="btn btn-primary">
-        Import Problems
-      </a>
+      <h1 class="mb-4">LeetCode Tracker</h1>
+
+      <!-- Problem statistics -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Problems Imported</h5>
+              <p class="display-5 mb-0" th:text="${stats.problemsImported}">
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Problems Completed</h5>
+              <p class="display-5 mb-0" th:text="${stats.problemsCompleted}">
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Problems Remaining</h5>
+              <p class="display-5 mb-0" th:text="${stats.problemsRemaining}">
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Curriculum statistics -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Curricula</h5>
+              <p class="display-5 mb-0" th:text="${stats.curricula}">0</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Modules</h5>
+              <p class="display-5 mb-0" th:text="${stats.modules}">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex flex-wrap gap-2">
+        <a th:href="@{/web/problems/import}" class="btn btn-primary">
+          Import Problems
+        </a>
+
+        <a th:href="@{/web/problems}" class="btn btn-outline-secondary">
+          Browse Problems
+        </a>
+
+        <a th:href="@{/web/curricula}" class="btn btn-outline-secondary">
+          Browse Curricula
+        </a>
+
+        <a th:href="@{/web/modules}" class="btn btn-outline-secondary">
+          Browse Modules
+        </a>
+      </div>
     </main>
   </body>
 </html>

@@ -22,6 +22,11 @@ public class ModuleProblem extends OrderedProblem {
         this.module = module;
     }
 
+    public ModuleProblem(Module module, Problem problem) {
+        super(problem);
+        this.module = module;
+    }
+
     public Module getModule() {
         return module;
     }
