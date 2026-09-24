@@ -11,6 +11,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 
 @Entity
 public class Curriculum {
@@ -21,9 +22,11 @@ public class Curriculum {
     private String name;
 
     @OneToMany(mappedBy = "curriculum")
+    @OrderBy("position ASC")
     private List<Module> modules = new ArrayList<>();
 
     @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<CurriculumProblem> problems = new ArrayList<>();
 
     protected Curriculum() {

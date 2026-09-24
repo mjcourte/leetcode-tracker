@@ -33,15 +33,16 @@
           >
             <thead>
               <tr>
-                <th scope="col">Position</th>
                 <th scope="col">Name</th>
+                <th scope="col">Problems</th>
+                <th scope="col">Completed</th>
+                <th scope="col">To Revisit</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               <tr th:each="module : ${curriculum.modules}">
-                <td th:text="${module.position}">0</td>
                 <td>
                   <a
                     th:href="@{/web/modules/{id}(id=${module.id})}"
@@ -50,6 +51,9 @@
                     Module
                   </a>
                 </td>
+                <td th:text="${moduleStatuses[module.id].total}">0</td>
+                <td th:text="${moduleStatuses[module.id].completed}">0</td>
+                <td th:text="${moduleStatuses[module.id].revisit}">0</td>
 
                 <td>
                   <div class="d-flex gap-2 align-items-center">
@@ -78,7 +82,7 @@
                       method="post"
                     >
                       <button type="submit" class="btn btn-danger">
-                        Remove
+                        Unlink
                       </button>
                     </form>
                   </div>
@@ -265,7 +269,7 @@
                       method="post"
                     >
                       <button type="submit" class="btn btn-danger">
-                        Remove
+                        Unlink
                       </button>
                     </form>
                   </div>
@@ -286,7 +290,7 @@
           <select
             id="problemId"
             name="problemId"
-            class="form-select w-50"
+            class="form-select w-50 problem-select"
             required
           >
             <option value="">Select a problem</option>
@@ -294,7 +298,7 @@
             <option
               th:each="problem : ${availableProblems}"
               th:value="${problem.id}"
-              th:text="${problem.title}"
+              th:text="${problem.id + '. ' + problem.title}"
             >
               Problem
             </option>

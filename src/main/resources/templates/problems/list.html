@@ -7,78 +7,143 @@
     <main class="container">
       <h1>Problems</h1>
 
-      <a th:href="@{/web/problems/import}" class="btn btn-primary">
+      <a th:href="@{/web/problems/import}" class="btn btn-primary mb-4">
         Import Problems
       </a>
 
       <form th:action="@{/web/problems}" method="get" class="mb-4">
-        <div class="mb-3">
-          <label class="form-label">Difficulty</label>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Filters</h5>
 
-          <div class="d-flex flex-wrap gap-2">
-            <!-- All difficulties -->
-            <input
-              type="radio"
-              class="btn-check"
-              name="difficulty"
-              id="difficulty-all"
-              value=""
-              autocomplete="off"
-              th:checked="${selectedDifficulty == null}"
-              onchange="this.form.submit()"
-            />
-            <label class="btn btn-outline-secondary" for="difficulty-all">
-              All
-            </label>
+            <div class="d-flex flex-wrap gap-4 mb-3">
+              <div class="mb-3">
+                <label class="form-label">Difficulty</label>
 
-            <!-- Individual difficulties -->
-            <div th:each="difficulty : ${difficulties}">
-              <input
-                type="radio"
-                class="btn-check"
-                name="difficulty"
-                th:id="${'difficulty-' + difficulty.name()}"
-                th:value="${difficulty.name()}"
-                autocomplete="off"
-                th:checked="${selectedDifficulty == difficulty}"
-                onchange="this.form.submit()"
-              />
-              <label
-                class="btn"
-                th:classappend="${difficulty.badgeClass.replace('text-bg-', 'btn-outline-')}"
-                th:for="${'difficulty-' + difficulty.name()}"
-                th:text="${difficulty.displayName}"
-              >
-                Medium
-              </label>
+                <div class="d-flex flex-wrap gap-2">
+                  <!-- All difficulties -->
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="difficulty"
+                    id="difficulty-all"
+                    value=""
+                    autocomplete="off"
+                    th:checked="${selectedDifficulty == null}"
+                    onchange="this.form.submit()"
+                  />
+                  <label class="btn btn-outline-secondary" for="difficulty-all">
+                    All
+                  </label>
+
+                  <!-- Individual difficulties -->
+                  <div th:each="difficulty : ${difficulties}">
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="difficulty"
+                      th:id="${'difficulty-' + difficulty.name()}"
+                      th:value="${difficulty.name()}"
+                      autocomplete="off"
+                      th:checked="${selectedDifficulty == difficulty}"
+                      onchange="this.form.submit()"
+                    />
+                    <label
+                      class="btn"
+                      th:classappend="${difficulty.badgeClass.replace('text-bg-', 'btn-outline-')}"
+                      th:for="${'difficulty-' + difficulty.name()}"
+                      th:text="${difficulty.displayName}"
+                    >
+                      Medium
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+
+                <div class="d-flex flex-wrap gap-2">
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="status"
+                    id="status-all"
+                    value="ALL"
+                    th:checked="${selectedStatus == T(com.example.leetcodetracker.problem.ProblemStatus).ALL}"
+                    onchange="this.form.submit()"
+                  />
+                  <label class="btn btn-outline-secondary" for="status-all">
+                    All
+                  </label>
+
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="status"
+                    id="status-solved"
+                    value="SOLVED"
+                    th:checked="${selectedStatus == T(com.example.leetcodetracker.problem.ProblemStatus).SOLVED}"
+                    onchange="this.form.submit()"
+                  />
+                  <label class="btn btn-outline-secondary" for="status-solved">
+                    Solved
+                  </label>
+
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="status"
+                    id="status-unsolved"
+                    value="UNSOLVED"
+                    th:checked="${selectedStatus == T(com.example.leetcodetracker.problem.ProblemStatus).UNSOLVED}"
+                    onchange="this.form.submit()"
+                  />
+                  <label
+                    class="btn btn-outline-secondary"
+                    for="status-unsolved"
+                  >
+                    Unsolved
+                  </label>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Tags -->
-        <div class="mb-3">
-          <label class="form-label">Tags</label>
+            <!-- Tags -->
+            <div class="mb-3">
+              <label class="form-label">Tags</label>
 
-          <div class="d-flex flex-wrap gap-2">
-            <div th:each="tag : ${tags}">
               <input
-                type="checkbox"
-                class="btn-check"
-                name="tags"
-                th:id="${'tag-' + tag.slug}"
-                th:value="${tag.slug}"
+                id="tag-filter"
+                type="search"
+                class="form-control mb-2"
+                placeholder="Filter tags..."
                 autocomplete="off"
-                th:checked="${selectedTags.contains(tag.slug)}"
-                onchange="this.form.submit()"
               />
 
-              <label
-                class="btn btn-outline-secondary"
-                th:for="${'tag-' + tag.slug}"
-                th:text="${tag.name}"
-              >
-                Array
-              </label>
+              <div id="tag-list" class="d-flex flex-wrap gap-2">
+                <div th:each="tag : ${tags}" class="tag-option">
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    name="tags"
+                    th:id="${'tag-' + tag.slug}"
+                    th:value="${tag.slug}"
+                    autocomplete="off"
+                    th:checked="${selectedTags.contains(tag.slug)}"
+                    onchange="this.form.submit()"
+                  />
+
+                  <label
+                    class="btn btn-outline-secondary"
+                    th:for="${'tag-' + tag.slug}"
+                    th:text="${tag.name}"
+                  >
+                    Array
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -150,7 +215,7 @@
                     th:text="${tag.name}"
                     class="badge rounded-pill text-bg-secondary me-1 text-decoration-none"
                     >Array</a
-                  ><span th:if="${!iter.last}">, </span>
+                  ><span th:if="${!iter.last}"> </span>
                 </span>
               </td>
             </tr>
@@ -158,5 +223,7 @@
         </table>
       </div>
     </main>
+
+    <div th:replace="~{fragments/scripts :: scripts}"></div>
   </body>
 </html>

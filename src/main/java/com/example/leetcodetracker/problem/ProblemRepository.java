@@ -8,31 +8,33 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
-    // jpa repo provides impls for findAll and findByI
-    List<Problem> findByDifficulty(ProblemDifficulty difficulty);
+        // jpa repo provides impls for findAll and findByI
+        List<Problem> findAllByOrderByIdAsc();
 
-    @Query("""
-            SELECT p
-            FROM Problem p
-            JOIN p.tags t
-            WHERE t.slug IN :slugs
-            GROUP BY p
-            HAVING COUNT(DISTINCT t.slug) = :tagCount
-            """)
-    List<Problem> findByAllTagSlugs(
-            @Param("slugs") Collection<String> slugs,
-            @Param("tagCount") long tagCount);
+        List<Problem> findByDifficultyOrderByIdAsc(ProblemDifficulty difficulty);
 
-    @Query("""
-            SELECT p
-            FROM Problem p
-            JOIN p.tags t
-            WHERE p.difficulty = :difficulty AND t.slug IN :slugs
-            GROUP BY p
-            HAVING COUNT(DISTINCT t.slug) = :tagCount
-            """)
-    List<Problem> findByDifficultyAndAllTagSlugs(
-            @Param("difficulty") ProblemDifficulty difficulty,
-            @Param("slugs") Collection<String> slugs,
-            @Param("tagCount") long TagCount);
+        @Query("""
+                        SELECT p
+                        FROM Problem p
+                        JOIN p.tags t
+                        WHERE t.slug IN :slugs
+                        GROUP BY p
+                        HAVING COUNT(DISTINCT t.slug) = :tagCount
+                        """)
+        List<Problem> findByAllTagSlugsOrderByIdAsc(
+                        @Param("slugs") Collection<String> slugs,
+                        @Param("tagCount") long tagCount);
+
+        @Query("""
+                        SELECT p
+                        FROM Problem p
+                        JOIN p.tags t
+                        WHERE p.difficulty = :difficulty AND t.slug IN :slugs
+                        GROUP BY p
+                        HAVING COUNT(DISTINCT t.slug) = :tagCount
+                        """)
+        List<Problem> findByDifficultyAndAllTagSlugsOrderByIdAsc(
+                        @Param("difficulty") ProblemDifficulty difficulty,
+                        @Param("slugs") Collection<String> slugs,
+                        @Param("tagCount") long TagCount);
 }

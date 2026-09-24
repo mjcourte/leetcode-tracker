@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 
 @Entity
 public class Module implements Positionable {
@@ -27,6 +28,7 @@ public class Module implements Positionable {
     private Curriculum curriculum;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<ModuleProblem> problems = new ArrayList<>();
 
     protected Module() {

@@ -1,8 +1,14 @@
 package com.example.leetcodetracker.curriculum;
 
 import com.example.leetcodetracker.modules.ModuleService;
+import com.example.leetcodetracker.modules.ModuleStatus;
+import com.example.leetcodetracker.modules.Module;
 import com.example.leetcodetracker.problem.ProblemService;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -30,17 +36,44 @@ public class CurriculumWebController {
 
     @GetMapping
     public String listCurricula(Model model) {
-        model.addAttribute("curricula", curriculumService.getAllCurricula());
+        List<Curriculum> curricula = curriculumService.getAllCurricula();
+        Set<Long> solvedProblemIds = problemService.getSolvedProblemIds();
+
+        Map<UUID, CurriculumStatus> curriculumStatuses = new HashMap<>();
+
+        for (Curriculum curriculum : curricula) {
+            curriculumStatuses.put(
+                    curriculum.getId(),
+                    curriculumService.getStatus(
+                            curriculum,
+                            solvedProblemIds));
+        }
+
+        model.addAttribute("curricula", curricula);
+        model.addAttribute("curriculumStatuses", curriculumStatuses);
         return "curricula/list";
     }
 
     @GetMapping("/{id}")
     public String getCurriculum(@PathVariable UUID id, Model model) {
 
+        Curriculum curriculum = curriculumService.getCurriculum(id);
+        Set<Long> solvedProblemIds = problemService.getSolvedProblemIds();
+
         model.addAttribute("curriculum", curriculumService.getCurriculum(id));
         model.addAttribute("availableModules", moduleService.getAllModules());
         model.addAttribute("availableProblems", problemService.getAllProblems());
         model.addAttribute("solvedProblemIds", problemService.getSolvedProblemIds());
+
+        Map<UUID, ModuleStatus> moduleStatuses = new HashMap<>();
+
+        for (Module module : curriculum.getModules()) {
+            moduleStatuses.put(
+                    module.getId(),
+                    moduleService.getStatus(module, solvedProblemIds));
+        }
+
+        model.addAttribute("moduleStatuses", moduleStatuses);
         return "curricula/detail";
     }
 

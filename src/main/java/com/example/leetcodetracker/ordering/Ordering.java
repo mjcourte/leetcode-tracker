@@ -1,5 +1,6 @@
 package com.example.leetcodetracker.ordering;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class Ordering<T extends Positionable> {
@@ -23,18 +24,29 @@ public class Ordering<T extends Positionable> {
         int oldPosition = item.getPosition();
         newPosition = normalizeTarget(newPosition, items.size());
 
-        items.remove(oldPosition);
-        if (newPosition > oldPosition) {
-            newPosition--;
+        if (oldPosition == newPosition) {
+            return;
         }
 
-        items.add(newPosition, item);
+        if (newPosition < oldPosition) {
+            for (T other : items) {
+                int position = other.getPosition();
 
-        int start = Math.min(oldPosition, newPosition);
-        int end = Math.max(oldPosition, newPosition);
-        for (int i = start; i <= end; i++) {
-            items.get(i).setPosition(i);
+                if (position >= newPosition && position < oldPosition) {
+                    other.setPosition(position + 1);
+                }
+            }
+        } else {
+            for (T other : items) {
+                int position = other.getPosition();
+
+                if (position > oldPosition && position <= newPosition) {
+                    other.setPosition(position - 1);
+                }
+            }
         }
+
+        item.setPosition(newPosition);
     }
 
     public void remove(List<T> items, T item) {
@@ -58,5 +70,13 @@ public class Ordering<T extends Positionable> {
             throw new IllegalArgumentException("Position must be >= -1.");
         }
         return requested;
+    }
+
+    public void normalize(List<T> items) {
+        items.sort(Comparator.comparingInt(Positionable::getPosition));
+
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).setPosition(i);
+        }
     }
 }

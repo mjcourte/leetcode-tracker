@@ -11,6 +11,13 @@
           <thead>
             <tr>
               <th scope="col">Name</th>
+              <th scope="col">Modules</th>
+              <th scope="col">Module Problems</th>
+              <th scope="col">Module Progress</th>
+              <th scope="col">Module Revisit</th>
+              <th scope="col">Direct Problems</th>
+              <th scope="col">Direct Progress</th>
+              <th scope="col">Direct Revisit</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -25,12 +32,65 @@
                   Curriculum
                 </a>
               </td>
+
+              <td th:text="${curriculumStatuses[curriculum.id].modules}">8</td>
+
+              <td th:text="${curriculumStatuses[curriculum.id].moduleProblems}">
+                60
+              </td>
+
+              <td>
+                <span
+                  th:text="${curriculumStatuses[curriculum.id].completedModuleProblems}"
+                >
+                  42
+                </span>
+                /
+                <span
+                  th:text="${curriculumStatuses[curriculum.id].moduleProblems}"
+                >
+                  60
+                </span>
+              </td>
+
+              <td
+                th:text="${curriculumStatuses[curriculum.id].moduleProblemsToRevisit}"
+              >
+                5
+              </td>
+
+              <td
+                th:text="${curriculumStatuses[curriculum.id].curriculumProblems}"
+              >
+                3
+              </td>
+
+              <td>
+                <span
+                  th:text="${curriculumStatuses[curriculum.id].completedCurriculumProblems}"
+                >
+                  2
+                </span>
+                /
+                <span
+                  th:text="${curriculumStatuses[curriculum.id].curriculumProblems}"
+                >
+                  3
+                </span>
+              </td>
+
+              <td
+                th:text="${curriculumStatuses[curriculum.id].curriculumProblemsToRevisit}"
+              >
+                1
+              </td>
+
               <td>
                 <form
                   th:action="@{/web/curricula/{id}/delete(id=${curriculum.id})}"
                   method="post"
                 >
-                  <button type="submit">Delete</button>
+                  <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
               </td>
             </tr>

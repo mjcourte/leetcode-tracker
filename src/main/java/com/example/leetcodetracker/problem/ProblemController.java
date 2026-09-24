@@ -31,11 +31,12 @@ public class ProblemController {
     @GetMapping
     public List<Problem> getProblems(
             @RequestParam(required = false) ProblemDifficulty difficulty,
-            @RequestParam(required = false) List<String> tags) {
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(defaultValue = "ALL") ProblemStatus status) {
 
         return problemService.getProblems(
                 difficulty,
-                tags == null ? List.of() : tags);
+                tags == null ? List.of() : tags, status);
     }
 
     @GetMapping("/{id}")

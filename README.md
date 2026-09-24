@@ -2,15 +2,18 @@
 
 all at once because im stupid
 
+- this is probably possible in leetcode, possibly without even premium, but that wouldn't help me learn java or spring or bootstrap
 - the domain is still example, and i do not care to change it
 - you import your own stuff, it doesnt autoscrape
 - doesnt require any auth, doesnt use any auth, does not use your LC account at all
 - you run your own local postgres and set .env
 - you make your own curricula with modules and or problems.
+- module was a terrible name, i should have used chapter, but its too late now, enjoy namespace collisions if you dont import
 - eg grind 75 has 8 weeks (8 modules), then you associate all the things
 - when you finish a problem you can log the date, time elapse, language, and leave notes and write the solution for all i care
 - the notes box is probably unsanitized so have fun with that
 - then you leave it open in your browser forever while you do leetcode for the rest of your life
+- run.cmd or run.sh for your laziness
 
 ## TODO list
 
@@ -20,7 +23,7 @@ all at once because im stupid
 4. ~problem import from somewhere webcontroller~
 5. ~impl problem status~
 6. ~problem status indicators everywhere a problem is listed. status "resettable" to indicate i want to try again~
-7. aggregation of status for module/curricula eg "not started" "started" "complete" percent or X/Y, and date completed
+7. ~aggregation of status for module/curricula eg "not started" "started" "complete" percent or X/Y, and date completed~
 8. graphs page which show completion time statistics per language/difficulty/topictag
 9. ui dress up including any future ideas
 10. draggable reorder move instead of form entry
@@ -33,9 +36,14 @@ all at once because im stupid
 
 ### curriculum detail page
 
-- table does not need position index
 - prefer move action to be drag than num entry + click
+- add problem forms suck from a massive select, make a type filter
 
 ### module detail page
 
 - check same as curriculum detail page
+
+## problem listing page
+
+- what the hell is even the default sort?
+- sort by frontendId number

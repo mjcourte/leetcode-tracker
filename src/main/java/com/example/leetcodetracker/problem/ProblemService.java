@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,33 +59,62 @@ public class ProblemService {
 
     @Transactional(readOnly = true)
     public List<Problem> getAllProblems() {
-        return problemRepository.findAll();
+        return problemRepository.findAllByOrderByIdAsc();
     }
 
     // get filtered by difficulty and/or tags
     @Transactional(readOnly = true)
     public List<Problem> getProblems(
             ProblemDifficulty difficulty,
-            Collection<String> tagSlugs) {
+            Collection<String> tagSlugs,
+            ProblemStatus status) {
 
-        if (difficulty != null && !tagSlugs.isEmpty()) {
-            return problemRepository.findByDifficultyAndAllTagSlugs(
-                    difficulty,
-                    tagSlugs,
-                    tagSlugs.size());
-        }
+        // if (difficulty != null && !tagSlugs.isEmpty()) {
+        // return problemRepository.findByDifficultyAndAllTagSlugsOrderByIdAsc(
+        // difficulty,
+        // tagSlugs,
+        // tagSlugs.size());
+        // }
+
+        // if (difficulty != null) {
+        // return problemRepository.findByDifficultyOrderByIdAsc(difficulty);
+        // }
+
+        // if (!tagSlugs.isEmpty()) {
+        // return problemRepository.findByAllTagSlugsOrderByIdAsc(
+        // tagSlugs,
+        // tagSlugs.size());
+        // }
+
+        // return problemRepository.findAllByOrderByIdAsc();
+        Set<Long> solvedProblemIds = problemSubmissionRepository
+                .findSolvedProblemIds();
+
+        Stream<Problem> problems = problemRepository
+                .findAllByOrderByIdAsc()
+                .stream();
 
         if (difficulty != null) {
-            return problemRepository.findByDifficulty(difficulty);
+            problems = problems.filter(
+                    p -> p.getDifficulty() == difficulty);
         }
 
         if (!tagSlugs.isEmpty()) {
-            return problemRepository.findByAllTagSlugs(
-                    tagSlugs,
-                    tagSlugs.size());
+            problems = problems.filter(
+                    p -> tagSlugs.stream()
+                            .allMatch(slug -> p.getTags().stream()
+                                    .anyMatch(tag -> tag.getSlug().equals(slug))));
         }
 
-        return problemRepository.findAll();
+        if (status == ProblemStatus.SOLVED) {
+            problems = problems.filter(
+                    p -> solvedProblemIds.contains(p.getId()));
+        } else if (status == ProblemStatus.UNSOLVED) {
+            problems = problems.filter(
+                    p -> !solvedProblemIds.contains(p.getId()));
+        }
+
+        return problems.toList();
     }
 
     @Transactional(readOnly = true)

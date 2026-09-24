@@ -36,6 +36,7 @@ public class ProblemWebController {
     public String listProblems(
             @RequestParam(required = false) ProblemDifficulty difficulty,
             @RequestParam(required = false) List<String> tags,
+            @RequestParam(defaultValue = "ALL") ProblemStatus status,
             Model model) {
 
         List<String> tagSlugs = tags == null ? List.of() : tags;
@@ -57,7 +58,7 @@ public class ProblemWebController {
 
         model.addAttribute(
                 "problems",
-                problemService.getProblems(difficulty, tagSlugs));
+                problemService.getProblems(difficulty, tagSlugs, status));
 
         model.addAttribute("difficulties", ProblemDifficulty.values());
         model.addAttribute("tags", tagRepository.findAll());
@@ -66,6 +67,7 @@ public class ProblemWebController {
                 problemService.getSolvedProblemIds());
 
         model.addAttribute("selectedDifficulty", difficulty);
+        model.addAttribute("selectedStatus", status);
         model.addAttribute("selectedTags", tagSlugs);
         model.addAttribute(
                 "latestSolvedDates",

@@ -5,9 +5,11 @@ import com.example.leetcodetracker.problem.ProblemNotFoundException;
 import com.example.leetcodetracker.ordering.Ordering;
 import com.example.leetcodetracker.modules.Module;
 import com.example.leetcodetracker.modules.ModuleNotFoundException;
+import com.example.leetcodetracker.modules.ModuleProblem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -231,5 +233,54 @@ public class CurriculumService {
         } else {
             curriculumProblem.markForRevisit();
         }
+    }
+
+    public CurriculumStatus getStatus(
+            Curriculum curriculum,
+            Set<Long> solvedProblemIds) {
+
+        int modules = curriculum.getModules().size();
+
+        int moduleProblems = 0;
+        int completedModuleProblems = 0;
+        int moduleProblemsToRevisit = 0;
+
+        for (Module module : curriculum.getModules()) {
+            for (ModuleProblem mp : module.getProblems()) {
+                moduleProblems++;
+
+                if (solvedProblemIds.contains(mp.getProblem().getId())) {
+                    completedModuleProblems++;
+                }
+
+                if (mp.isRevisit()) {
+                    moduleProblemsToRevisit++;
+                }
+            }
+        }
+
+        int curriculumProblems = curriculum.getProblems().size();
+
+        int completedCurriculumProblems = 0;
+        int curriculumProblemsToRevisit = 0;
+
+        for (CurriculumProblem cp : curriculum.getProblems()) {
+            if (solvedProblemIds.contains(cp.getProblem().getId())) {
+                completedCurriculumProblems++;
+            }
+
+            if (cp.isRevisit()) {
+                curriculumProblemsToRevisit++;
+            }
+        }
+
+        return new CurriculumStatus(
+                modules,
+                moduleProblems,
+                completedModuleProblems,
+                moduleProblemsToRevisit,
+                curriculumProblems,
+                completedCurriculumProblems,
+                curriculumProblemsToRevisit);
     }
 }

@@ -111,4 +111,10 @@ public class ModuleWebController {
 
         return "redirect:/web/modules/{moduleId}";
     }
+
+    @PostMapping("/{moduleId}/problems/normalize")
+    public String normalizeProblems(@PathVariable UUID moduleId) {
+        moduleService.normalizeProblems(moduleId);
+        return "redirect:/web/modules/{moduleId}";
+    }
 }

@@ -105,7 +105,6 @@
             <tr>
               <th scope="col">Solved</th>
               <th scope="col">Revisit</th>
-              <th scope="col">Position</th>
               <th scope="col">Problem</th>
               <th scope="col">Actions</th>
             </tr>
@@ -169,8 +168,6 @@
                 </form>
               </td>
 
-              <td th:text="${moduleProblem.position}">0</td>
-
               <td>
                 <a
                   th:href="@{/web/problems/{id}(id=${moduleProblem.problem.id})}"
@@ -188,7 +185,7 @@
                         moduleProblemId=${moduleProblem.id}
                     )}"
                     method="post"
-                    class="d-flex gap-2"
+                    class="d-flex gap-2 w-25"
                   >
                     <input
                       type="number"
@@ -210,7 +207,7 @@
                     )}"
                     method="post"
                   >
-                    <button type="submit" class="btn btn-danger">Remove</button>
+                    <button type="submit" class="btn btn-danger">Unlink</button>
                   </form>
                 </div>
               </td>
@@ -233,7 +230,7 @@
         <select
           id="problemId"
           name="problemId"
-          class="form-select w-50"
+          class="form-select w-50 problem-select"
           required
         >
           <option value="">Select a problem</option>
@@ -241,7 +238,7 @@
           <option
             th:each="problem : ${availableProblems}"
             th:value="${problem.id}"
-            th:text="${problem.title}"
+            th:text="${problem.id + '. ' + problem.title}"
           >
             Problem
           </option>
@@ -271,15 +268,30 @@
         <button type="submit" class="btn btn-primary">Save</button>
       </form>
 
-      <h2>Delete Module</h2>
+      <div class="mt-5">
+        <h2>Danger Zone</h2>
 
-      <form
-        th:action="@{/web/modules/{id}/delete(id=${module.id})}"
-        method="post"
-        class="d-flex gap-2"
-      >
-        <button type="submit" class="btn btn-danger">Delete</button>
-      </form>
+        <div class="d-flex gap-2">
+          <form
+            th:action="@{/web/modules/{moduleId}/problems/normalize(
+                moduleId=${module.id}
+            )}"
+            method="post"
+          >
+            <button type="submit" class="btn btn-warning">
+              Normalize Problem Positions
+            </button>
+          </form>
+
+          <form
+            th:action="@{/web/modules/{id}/delete(id=${module.id})}"
+            method="post"
+          >
+            <button type="submit" class="btn btn-danger">Delete Module</button>
+          </form>
+        </div>
+      </div>
     </main>
+    <div th:replace="~{fragments/scripts :: scripts}"></div>
   </body>
 </html>

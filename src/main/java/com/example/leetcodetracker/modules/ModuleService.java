@@ -152,4 +152,21 @@ public class ModuleService {
                 .filter(ModuleProblem::isRevisit)
                 .count();
     }
+
+    public ModuleStatus getStatus(Module module, Set<Long> solvedProblemIds) {
+        int total = module.getProblems().size();
+        int completed = (int) module.getProblems().stream()
+                .filter(mp -> solvedProblemIds.contains(mp.getProblem().getId())).count();
+        int revisit = (int) module.getProblems().stream().filter(ModuleProblem::isRevisit).count();
+
+        return new ModuleStatus(total, completed, revisit);
+    }
+
+    @Transactional
+    public void normalizeProblems(UUID moduleId) {
+        Module module = moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new ModuleNotFoundException(moduleId));
+
+        problemOrdering.normalize(module.getProblems());
+    }
 }
