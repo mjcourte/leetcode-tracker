@@ -1,20 +1,16 @@
-# Learning Java/SpringBoot
+# Learning Java/SpringBoot/MVC/monolith by making this dumb leet code tracker thing
 
-all at one because im stupid.
+all at once because im stupid
 
-perhaps let make this a leetcode tracker lol
-
-- they are callable via graphql
-- for a userID/email
-- design a curriculum
-- tabulate the curriculum in sections (eg grind 75 week 7, or topic dynamic programming)
-- pull question details, tags, status for account (completed in what lang)
-- allow logging completion in language with time and notes
-- review notes per topic/tag
-- review statistics of time-to-finish problem by topic or difficulty
-- gonna want an .env template that dictates env vars such as user ID / email
-- but the actual copy of env is not tracked
-- likewise init a db file that does not get tracked
+- the domain is still example, and i do not care to change it
+- you import your own stuff, it doesnt autoscrape
+- doesnt require any auth, doesnt use any auth, does not use your LC account at all
+- you run your own local postgres and set .env
+- you make your own curricula with modules and or problems.
+- eg grind 75 has 8 weeks (8 modules), then you associate all the things
+- when you finish a problem you can log the date, time elapse, language, and leave notes and write the solution for all i care
+- the notes box is probably unsanitized so have fun with that
+- then you leave it open in your browser forever while you do leetcode for the rest of your life
 
 ## TODO list
 
