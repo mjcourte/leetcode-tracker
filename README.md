@@ -22,3 +22,17 @@ all at once because im stupid
 1. draggable reorder move instead of form entry
 1. text-like file create data eg curriculum+modules+problems
 1. refactor submissions to CollectionProblems?
+
+### shorterer list
+
+- add link to leetcode on list view
+
+## curricula
+
+- copy the Neetcode 150/250 sets?
+- see if we can get some scraping/automation in here...
+  - scrape html i guess?
+  - batch import all the problems
+  - create the curriculum
+  - create & add modules
+  - assign problems

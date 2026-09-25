@@ -1,0 +1,1 @@
+& "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -U postgres -Fc -d leetcodetracker -f leetcodetracker.dump

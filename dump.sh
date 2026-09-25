@@ -1,0 +1,1 @@
+pg_dump -U postgres -Fc -d leetcodetracker -f leetcodetracker.dump
