@@ -61,7 +61,7 @@ public class ProblemWebController {
                 problemService.getProblems(difficulty, tagSlugs, status));
 
         model.addAttribute("difficulties", ProblemDifficulty.values());
-        model.addAttribute("tags", tagRepository.findAll());
+        model.addAttribute("tags", tagRepository.findTagsUsedByMultipleProblems());
         model.addAttribute(
                 "solvedProblemIds",
                 problemService.getSolvedProblemIds());

@@ -37,4 +37,5 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
                         @Param("difficulty") ProblemDifficulty difficulty,
                         @Param("slugs") Collection<String> slugs,
                         @Param("tagCount") long TagCount);
+
 }

@@ -210,6 +210,20 @@ public class ProblemService {
 
     }
 
+    @Transactional
+    public Problem getOrImportProblem(String input) {
+        LeetCodeProblem lcp = leetCodeService.fetchProblem(input);
+
+        if (lcp == null) {
+            throw new ProblemNotFoundException(input);
+        }
+
+        Long problemId = Long.parseLong(lcp.questionFrontendId());
+
+        return problemRepository.findById(problemId)
+                .orElseGet(() -> problemRepository.save(toProblem(lcp)));
+    }
+
     public List<ModuleProblem> getModuleOccurrences(Long problemId) {
         return moduleProblemRepository.findByProblemId(problemId);
     }

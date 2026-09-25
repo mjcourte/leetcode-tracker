@@ -41,14 +41,13 @@ public class LeetCodeService {
         String value = input.trim();
 
         if (value.startsWith("http://") || value.startsWith("https://")) {
-            return slugFromUrl(value);
+            value = slugFromUrl(value);
+        } else {
+            // Strip "1. ", "53. ", etc.
+            value = value.replaceFirst("^\\d+\\.\\s*", "");
+            value = value.toLowerCase().replaceAll("\\s+", "-");
         }
-        // Strip "1. ", "53. ", etc.
-        value = value.replaceFirst("^\\d+\\.\\s*", "");
-
-        return value
-                .toLowerCase()
-                .replaceAll("\\s+", "-");
+        return value.replaceAll("/$", "");
     }
 
     // get via slug normalizer

@@ -26,6 +26,7 @@ all at once because im stupid
 ### shorterer list
 
 - add link to leetcode on list view
+- filter singleton tags from problems/list?
 
 ## curricula
 
