@@ -31,3 +31,15 @@ if (tagFilter && tagList) {
         });
     });
 }
+
+const problemFilter = document.getElementById("problem-filter");
+const problemRows = document.querySelectorAll("tbody tr");
+
+problemFilter.addEventListener("input", () => {
+  const query = problemFilter.value.trim().toLowerCase();
+
+  problemRows.forEach(row => {
+    const title = row.dataset.problemTitle.toLowerCase();
+    row.hidden = query !== "" && !title.includes(query);
+  });
+});

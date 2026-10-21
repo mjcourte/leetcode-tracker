@@ -22,7 +22,9 @@ public class Ordering<T extends Positionable> {
             throw new IllegalArgumentException("Item is not in collection.");
         }
         int oldPosition = item.getPosition();
-        newPosition = normalizeTarget(newPosition, items.size());
+        // A move does not grow the collection, so the last valid slot is size() - 1.
+        // insert() does grow it, which is why it passes size() instead.
+        newPosition = normalizeTarget(newPosition, items.size() - 1);
 
         if (oldPosition == newPosition) {
             return;

@@ -16,6 +16,17 @@
           <div class="card-body">
             <h5 class="card-title">Filters</h5>
 
+            <div class="mb-3">
+              <label for="problem-filter" class="form-label">Problem</label>
+              <input
+                id="problem-filter"
+                type="search"
+                class="form-control"
+                placeholder="Filter problems..."
+                autocomplete="off"
+              />
+            </div>
+
             <div class="d-flex flex-wrap gap-4 mb-3">
               <div class="mb-3">
                 <label class="form-label">Difficulty</label>
@@ -136,7 +147,7 @@
                   />
 
                   <label
-                    class="btn btn-outline-secondary"
+                    class="btn btn-outline-secondary btn-sm"
                     th:for="${'tag-' + tag.slug}"
                     th:text="${tag.name}"
                   >
@@ -162,7 +173,10 @@
           </thead>
 
           <tbody>
-            <tr th:each="problem : ${problems}">
+            <tr
+              th:each="problem : ${problems}"
+              th:attr="data-problem-title=${problem.title}"
+            >
               <td>
                 <span
                   th:if="${solvedProblemIds.contains(problem.id)}"

@@ -1,39 +1,117 @@
-# Learning Java/SpringBoot/MVC/monolith by making this dumb leet code tracker thing
+# LeetCode Curriculum Tracker
 
-all at once because im stupid
+A self-hosted Spring Boot application for organising LeetCode practice into ordered
+curricula and modules, logging submissions, and keeping notes per problem.
 
-- this is probably possible in leetcode, possibly without even premium, but that wouldn't help me learn java or spring or bootstrap
-- the domain is still example, and i do not care to change it
-- you import your own stuff, it doesnt autoscrape
-- doesnt require any auth, doesnt use any auth, does not use your LC account at all
-- you run your own local postgres and set .env
-- you make your own curricula with modules and or problems.
-- module was a terrible name, i should have used chapter, but its too late now, enjoy namespace collisions if you dont import
-- eg grind 75 has 8 weeks (8 modules), then you associate all the things
-- when you finish a problem you can log the date, time elapse, language, and leave notes and write the solution for all i care
-- the notes box is probably unsanitized so have fun with that
-- then you leave it open in your browser forever while you do leetcode for the rest of your life
-- run.cmd or run.sh for your laziness
+Built to learn Java, Spring Boot, and server-rendered MVC by implementing a domain with
+real structure — ordered many-to-many relationships, external API ingestion, a layered
+service architecture — rather than a tutorial CRUD app. LeetCode's own lists cover some
+of this; the point was the implementation.
 
-## TODO list
+## Stack
 
-1. graphs page which show completion time statistics per language/difficulty/topictag
-1. ui dress up including any future ideas
-1. draggable reorder move instead of form entry
-1. text-like file create data eg curriculum+modules+problems
-1. refactor submissions to CollectionProblems?
+- **Java 25**, **Spring Boot 4.1** (Web MVC, Data JPA, Actuator)
+- **PostgreSQL** via Hibernate
+- **Thymeleaf** + Bootstrap 5 for server-rendered views
+- **jsoup** for HTML scraping, LeetCode's GraphQL API for problem metadata
+- Gradle, JUnit 5, AssertJ
 
-### shorterer list
+## Quickstart
 
-- add link to leetcode on list view
-- filter singleton tags from problems/list?
+Requires a JDK 25 toolchain and a running PostgreSQL instance.
 
-## curricula
+```bash
+# 1. Create the database
+createdb leetcodetracker
 
-- copy the Neetcode 150/250 sets?
-- see if we can get some scraping/automation in here...
-  - scrape html i guess?
-  - batch import all the problems
-  - create the curriculum
-  - create & add modules
-  - assign problems
+# 2. Configure credentials
+cp .env.example .env
+$EDITOR .env
+
+# 3. Run (sources .env, then ./gradlew bootRun)
+./run.sh        # run.cmd on Windows
+```
+
+The app serves on `http://localhost:8080`. The schema is created automatically on first
+start (`ddl-auto: update`), so no migration step is needed yet — see
+[Known limitations](#known-limitations).
+
+`dump.sh` and `restore.sh` wrap `pg_dump`/`pg_restore` for snapshotting your data.
+
+## Usage
+
+1. Create a **curriculum** — a practice plan, e.g. Grind 75.
+2. Add **modules** to it. A module is a sub-grouping, typically a week or a topic.
+3. Import **problems** from LeetCode by slug, or scrape a NeetCode list, then associate
+   them with curricula and modules. Ordering within each is explicit and reorderable.
+4. Log a **submission** when you finish a problem: date, elapsed time, language, and notes.
+
+Imports are explicit — nothing is pulled from your LeetCode account, and no scraping runs
+on a schedule.
+
+## Architecture
+
+Packages are organised **by feature** rather than by layer — `curriculum/`, `modules/`,
+`problem/`, `leetcode/`, `importer/` — each holding its own entities, repositories,
+service, controllers, and domain exceptions.
+
+A few things worth pointing at:
+
+- **Dual controllers over a shared service layer.** Each feature exposes a REST
+  `@RestController` and a Thymeleaf `@Controller`, both delegating to the same service, so
+  no business logic is coupled to a transport.
+- **Explicit join entities.** `CurriculumProblem` and `ModuleProblem` are real entities
+  carrying a `position`, rather than a bare `@ManyToMany`, because association order is
+  part of the domain.
+- **[`Ordering<T extends Positionable>`](src/main/java/com/example/leetcodetracker/ordering/Ordering.java).**
+  Insert, move, remove, and renumber logic for ordered collections, extracted once and
+  reused across curriculum modules, curriculum problems, and module problems. Maintains
+  the contiguous zero-based `position` invariant that `@OrderBy("position ASC")` depends
+  on. Unit tested in
+  [`OrderingTest`](src/test/java/com/example/leetcodetracker/ordering/OrderingTest.java).
+- **Two ingestion paths.** A GraphQL client against LeetCode's API for problem metadata,
+  and a jsoup scraper for NeetCode list structure.
+
+### Development note
+
+The `Module` entity collides with `java.lang.Module`, so that import is load-bearing in
+files touching both. `Chapter` would have been the better name; renaming it is on the list.
+
+## Testing
+
+```bash
+./gradlew test --tests "*OrderingTest*"   # unit tests, no database required
+./gradlew test                            # full suite; needs Postgres + .env for the context test
+```
+
+## Scope and non-goals
+
+Deliberately out of scope, since this is a single-user local tool:
+
+- **No authentication.** Don't expose it to a network you don't control.
+- **No LeetCode account integration.** It does not read your submissions, and needs no
+  credentials or premium subscription.
+- **No automatic scraping.** Imports are user-initiated.
+- **No deployment story.** Local Postgres and `bootRun`; no container or hosting config.
+
+## Known limitations
+
+- **Schema is managed by `ddl-auto: update`.** Fine for local use, wrong for anything else.
+  Flyway migrations are the next structural change.
+- **Test coverage is uneven.** `Ordering` is well covered; the service and controller
+  layers are not yet.
+- Notes and other user text are rendered through Thymeleaf's default escaping, but the app
+  assumes a single trusted user and has had no security review.
+
+## Roadmap
+
+- Flyway migrations replacing `ddl-auto`
+- `@WebMvcTest` and service-layer coverage
+- Completion-time statistics by language, difficulty, and topic tag
+- Drag-to-reorder in place of form-entry positions
+- Filter problems by name; show tag and association counts on list views
+- Rename `Module` to `Chapter`
+
+## License
+
+See [LICENSE](LICENSE).
