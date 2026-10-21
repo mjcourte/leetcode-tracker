@@ -1,5 +1,8 @@
 .env
 
+### Local database snapshots (see dump.sh / restore.sh) ###
+*.dump
+
 HELP.md
 .gradle
 build/
